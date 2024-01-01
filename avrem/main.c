@@ -68,7 +68,7 @@ void create_build_id() {
 	fclose(self);
 
 	crc = 0xFFFFFFFFLU;
-	for (i=0; i<szSelf; i++) {
+	for (i=0; (size_t)i<szSelf; i++) {
 		byte = tmp[i];
 		crc = crc ^ byte;
 		for (j = 7; j >= 0; j--) {
@@ -101,7 +101,7 @@ void timing_callback(void* dummy) {
 }
 
 int main(int argc, char* argv[]) {
-	int cycle_overflow = 0, i, dummy;
+	int cycle_overflow = 0, i;
 	int clocks_per_loop;
 	uint64_t start_time, end_time;
 
