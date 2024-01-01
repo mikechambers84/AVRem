@@ -53,7 +53,8 @@ int module_init(struct avr_core_s* core) {
 			if ((*module[i].init)(&module[i])) {
 				FreeLibrary(module[i].instance);
 				printl(LOG_ERROR, "Module init function returned failure status (%s)\n", module[i].name);
-				module[i].io_read = module[i].io_write = module[i].clock = NULL;
+				module[i].io_read = module[i].io_write = NULL;
+				module[i].clock = NULL;
 			}
 			else {
 				printl(LOG_INFO, "Module initialized: %c%s%c\n", 34, module[i].name, 34);
@@ -62,7 +63,8 @@ int module_init(struct avr_core_s* core) {
 		else {
 			FreeLibrary(module[i].instance);
 			printl(LOG_ERROR, "Module library contains no init function, so not loaded (%s)\n", module[i].name);
-			module[i].io_read = module[i].io_write = module[i].clock = NULL;
+			module[i].io_read = module[i].io_write = NULL;
+			module[i].clock = NULL;
 		}
 	}
 
@@ -80,10 +82,10 @@ int module_load(char* dllfile) {
 		return -1;
 	}
 
-	module[module_count].init = GetProcAddress(module[module_count].instance, "init");
-	module[module_count].io_read = GetProcAddress(module[module_count].instance, "io_read");
-	module[module_count].io_write = GetProcAddress(module[module_count].instance, "io_write");
-	module[module_count].clock = GetProcAddress(module[module_count].instance, "clock");
+	module[module_count].init = (void *)GetProcAddress(module[module_count].instance, "init");
+	module[module_count].io_read = (void *)GetProcAddress(module[module_count].instance, "io_read");
+	module[module_count].io_write = (void *)GetProcAddress(module[module_count].instance, "io_write");
+	module[module_count].clock = (void *)GetProcAddress(module[module_count].instance, "clock");
 
 	module_count++;
 	return 0;

@@ -66,7 +66,6 @@ void ext_write_callback(struct avr_core_s* core, void* peripheral, uint32_t addr
 
 void ext_rx(uint8_t val) {
 	int i;
-	uint8_t cksum;
 	uint32_t addr;
 
 	for (i = 1; i < 8; i++) {

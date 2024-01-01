@@ -6,6 +6,7 @@
 
 #ifdef USE_TCP
 #include <winsock2.h>
+#include <ws2tcpip.h>
 
 
 WSADATA wsaData;
@@ -39,7 +40,10 @@ int tcpconsole_init(struct usart_s* usart, uint16_t port) {
     }
 
     local[index].sin_family = AF_INET;
-    local[index].sin_addr.s_addr = (!ip_address) ? INADDR_ANY : inet_addr(ip_address);
+    if (ip_address)
+        inet_pton(AF_INET, ip_address, &local[index].sin_addr.s_addr);
+    else
+        local[index].sin_addr.s_addr = INADDR_ANY;
     local[index].sin_port = htons(port);
     listen_socket[index] = socket(AF_INET, socket_type, 0);
 
